@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام حجز مواعيد خدمات التنظيف</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* أنماط CSS السابقة تبقى كما هي */
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --confirmed: #2ecc71;
+            --pending: #f39c12;
+            --cancelled: #e74c3c;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* باقي الأنماط تبقى كما هي */
+        
+    </style>
+    <!-- إضافة Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <!-- المحتوى يبقى كما هو -->
+    <div class="container">
+        <header>
+            <div class="header-title">
+                <h1>نظام حجز مواعيد خدمات التنظيف</h1>
+                <p class="subtitle">إدارة حجوزات العملاء وتنظيم مواعيد العاملات</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="loadData()">
+                    <i class="fas fa-sync-alt"></i> تحديث البيانات
+                </button>
+                <button class="btn btn-success" onclick="showModal('addCustomer')">
+                    <i class="fas fa-user-plus"></i> عميل جديد
+                </button>
+                <button class="btn btn-success" onclick="showModal('addWorker')">
+                    <i class="fas fa-user-plus"></i> عاملة جديدة
+                </button>
+                <button class="btn btn-warning" onclick="toggleLogin()">
+                    <i class="fas fa-user"></i> <span id="loginText">تسجيل الدخول</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- نموذج تسجيل الدخول -->
+        <div id="loginSection" class="card" style="display: none;">
+            <h2 class="card-title">تسجيل الدخول</h2>
+            <div class="form-group">
+                <label for="loginEmail">البريد الإلكتروني:</label>
+                <input type="email" id="loginEmail" placeholder="example@email.com">
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">كلمة المرور:</label>
+                <input type="password" id="loginPassword" placeholder="كلمة المرور">
+            </div>
+            <button class="btn btn-primary" onclick="login()">تسجيل الدخول</button>
+            <button class="btn btn-success" onclick="showRegister()">إنشاء حساب جديد</button>
+        </div>
+
+        <!-- نموذج إنشاء حساب -->
+        <div id="registerSection" class="card" style="display: none;">
+            <h2 class="card-title">إنشاء حساب جديد</h2>
+            <div class="form-group">
+                <label for="registerEmail">البريد الإلكتروني:</label>
+                <input type="email" id="registerEmail" placeholder="example@email.com">
+            </div>
+            <div class="form-group">
+                <label for="registerPassword">كلمة المرور:</label>
+                <input type="password" id="registerPassword" placeholder="كلمة المرور (6 أحرف على الأقل)">
+            </div>
+            <button class="btn btn-success" onclick="register()">إنشاء حساب</button>
+            <button class="btn btn-primary" onclick="showLogin()">عودة لتسجيل الدخول</button>
+        </div>
+
+        <!-- محتوى النظام الرئيسي -->
+        <div id="mainContent">
+            <!-- المحتوى الأصلي للنظام -->
+        </div>
+
+    </div>
+
+    <script>
+        // تكوين Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyYOUR_API_KEY_HERE",
+            authDomain: "your-project-id.firebaseapp.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project-id.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef123456"
+        };
+
+        // تهيئة Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // بيانات التطبيق
+        let customers = [];
+        let workers = [];
+        let bookings = [];
+        let selectedWorker = null;
+        let selectedTime = null;
+        let selectedDate = null;
+        let selectedCustomer = null;
+        let currentTab = 'booking';
+        let currentUser = null;
+
+        // عناصر DOM
+        const customerInfoDiv = document.getElementById('customerInfo');
+        const customerNameSpan = document.getElementById('customerName');
+        const customerPhoneSpan = document.getElementById('customerPhone');
+        const customerAddressSpan = document.getElementById('customerAddress');
+        const customerMapLink = document.getElementById('customerMap');
+        const scheduleBody = document.getElementById('scheduleBody');
+        const scheduleHeader = document.getElementById('scheduleHeader');
+        const scheduleLoading = document.getElementById('scheduleLoading');
+        const scheduleTable = document.querySelector('.schedule table');
+        const datePicker = document.getElementById('datePicker');
+        const bookingSummary = document.getElementById('bookingSummary');
+        const workerSelector = document.getElementById('workerSelector');
+        const selectedDateDisplay = document.getElementById('selectedDateDisplay');
+        const loginSection = document.getElementById('loginSection');
+        const registerSection = document.getElementById('registerSection');
+        const mainContent = document.getElementById('mainContent');
+        const loginText = document.getElementById('loginText');
+
+        // تهيئة التطبيق
+        function initApp() {
+            // التحقق من حالة المستخدم
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    currentUser = user;
+                    loginText.textContent = 'تسجيل الخروج';
+                    loginSection.style.display = 'none';
+                    registerSection.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    loadData();
+                } else {
+                    currentUser = null;
+                    loginText.textContent = 'تسجيل الدخول';
+                    loginSection.style.display = 'block';
+                    registerSection.style.display = 'none';
+                    mainContent.style.display = 'none';
+                }
+            });
+
+            // تعيين التاريخ الحالي كتاريخ افتراضي
+            const today = new Date();
+            datePicker.value = formatDate(today);
+            selectedDate = datePicker.value;
+            selectedDateDisplay.textContent = `(${formatDateDisplay(today)})`;
+            
+            // إضافة مستمع حدث لتغيير التاريخ
+            datePicker.addEventListener('change', function() {
+                selectedDate = this.value;
+                selectedDateDisplay.textContent = `(${formatDateDisplay(new Date(selectedDate))})`;
+                generateSchedule();
+            });
+            
+            // إضافة مستمعات أحداث للألسنة
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    switchTab(tabName);
+                });
+            });
+        }
+
+        // تسجيل الدخول
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                showSuccess('تم تسجيل الدخول بنجاح');
+            } catch (error) {
+                showError('خطأ في تسجيل الدخول: ' + error.message);
+            }
+        }
+
+        // إنشاء حساب
+        async function register() {
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            
+            try {
+                await auth.createUserWithEmailAndPassword(email, password);
+                showSuccess('تم إنشاء الحساب بنجاح');
+            } catch (error) {
+                showError('خطأ في إنشاء الحساب: ' + error.message);
+            }
+        }
+
+        // تسجيل الخروج
+        async function logout() {
+            try {
+                await auth.signOut();
+                showSuccess('تم تسجيل الخروج بنجاح');
+            } catch (error) {
+                showError('خطأ في تسجيل الخروج: ' + error.message);
+            }
+        }
+
+        // تبديل بين تسجيل الدخول وإنشاء حساب
+        function toggleLogin() {
+            if (currentUser) {
+                logout();
+            } else {
+                loginSection.style.display = loginSection.style.display === 'none' ? 'block' : 'none';
+                registerSection.style.display = 'none';
+            }
+        }
+
+        function showRegister() {
+            loginSection.style.display = 'none';
+            registerSection.style.display = 'block';
+        }
+
+        function showLogin() {
+            loginSection.style.display = 'block';
+            registerSection.style.display = 'none';
+        }
+
+        // تحميل البيانات من Firebase
+        async function loadData() {
+            if (!currentUser) return;
+            
+            try {
+                showLoading();
+                
+                // جلب العملاء
+                const customersSnapshot = await db.collection('customers')
+                    .where('userId', '==', currentUser.uid)
+                    .get();
+                customers = customersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                
+                // جلب العاملات
+                const workersSnapshot = await db.collection('workers')
+                    .where('userId', '==', currentUser.uid)
+                    .get();
+                workers = workersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                
+                // جلب الحجوزات
+                const bookingsSnapshot = await db.collection('bookings')
+                    .where('userId', '==', currentUser.uid)
+                    .get();
+                bookings = bookingsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                
+                // عرض البيانات حسب اللسان النشط
+                if (currentTab === 'booking') {
+                    renderWorkers();
+                    generateSchedule();
+                } else if (currentTab === 'customers') {
+                    renderCustomersTable();
+                } else if (currentTab === 'workers') {
+                    renderWorkersTable();
+                } else if (currentTab === 'calendar') {
+                    renderCalendar();
+                }
+                
+                hideLoading();
+                showSuccess('تم تحميل البيانات بنجاح');
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showError('حدث خطأ في تحميل البيانات');
+            }
+        }
+
+        // حفظ عميل جديد في Firebase
+        async function saveCustomer(event) {
+            event.preventDefault();
+            if (!currentUser) return;
+            
+            const name = document.getElementById('newCustomerName').value;
+            const phone = document.getElementById('newCustomerPhone').value;
+            const address = document.getElementById('newCustomerAddress').value;
+            const mapLink = document.getElementById('newCustomerMap').value;
+            
+            try {
+                const docRef = await db.collection('customers').add({
+                    name,
+                    phone,
+                    address,
+                    mapLink,
+                    userId: currentUser.uid,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                customers.push({ id: docRef.id, name, phone, address, mapLink });
+                document.getElementById('customerForm').reset();
+                closeModal('addCustomer');
+                
+                showSuccess('تم添加 العميل بنجاح');
+                renderCustomersTable();
+            } catch (error) {
+                showError('خطأ في حفظ العميل: ' + error.message);
+            }
+        }
+
+        // حفظ عاملة جديدة في Firebase
+        async function saveWorker(event) {
+            event.preventDefault();
+            if (!currentUser) return;
+            
+            const name = document.getElementById('newWorkerName').value;
+            const phone = document.getElementById('newWorkerPhone').value;
+            const status = document.getElementById('newWorkerStatus').value;
+            
+            try {
+                const docRef = await db.collection('workers').add({
+                    name,
+                    phone,
+                    status,
+                    userId: currentUser.uid,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                workers.push({ id: docRef.id, name, phone, status });
+                document.getElementById('workerForm').reset();
+                closeModal('addWorker');
+                
+                showSuccess('تم添加 العاملة بنجاح');
+                renderWorkersTable();
+            } catch (error) {
+                showError('خطأ في حفظ العاملة: ' + error.message);
+            }
+        }
+
+        // حفظ حجز جديد في Firebase
+        async function bookAppointment() {
+            if (!currentUser || !selectedCustomer || !selectedWorker || !selectedTime) return;
+            
+            const duration = document.getElementById('serviceDuration').value;
+            const status = document.getElementById('bookingStatus').value;
+            
+            try {
+                const docRef = await db.collection('bookings').add({
+                    customerId: selectedCustomer.id,
+                    workerId: selectedWorker.id,
+                    date: selectedDate,
+                    startTime: selectedTime,
+                    endTime: calculateEndTime(selectedTime, duration),
+                    status,
+                    userId: currentUser.uid,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                const newBooking = {
+                    id: docRef.id,
+                    customerId: selectedCustomer.id,
+                    workerId: selectedWorker.id,
+                    date: selectedDate,
+                    startTime: selectedTime,
+                    endTime: calculateEndTime(selectedTime, duration),
+                    status
+                };
+                
+                bookings.push(newBooking);
+                showSuccess('تم الحجز بنجاح!');
+                resetForm();
+                generateSchedule();
+            } catch (error) {
+                showError('خطأ في الحجز: ' + error.message);
+            }
+        }
+
+        // باقي الدوال تبقى كما هي مع تعديلات بسيطة للتوافق مع Firebase
+
+        // وظائف مساعدة
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        function showError(message) {
+            alert(message);
+        }
+        
+        function showSuccess(message) {
+            console.log(message);
+        }
+
+        // تهيئة التطبيق عند التحميل
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
