@@ -6,7 +6,6 @@
     <title>نظام حجز مواعيد خدمات التنظيف</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* أنماط CSS السابقة تبقى كما هي */
         :root {
             --primary: #2c3e50;
             --secondary: #3498db;
@@ -40,8 +39,432 @@
             padding: 20px;
         }
         
-        /* باقي الأنماط تبقى كما هي */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
         
+        .header-title {
+            flex: 1;
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        .subtitle {
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+        }
+        
+        .btn-success {
+            background: var(--success);
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--secondary);
+            color: var(--secondary);
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .customer-info {
+            background: #e8f4fc;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .info-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            min-width: 100px;
+        }
+        
+        .schedule {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .time-slot {
+            padding: 8px;
+            border-radius: 4px;
+            margin: 2px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .available {
+            background-color: #e8f6f3;
+            color: #1d6a5b;
+        }
+        
+        .available:hover {
+            background-color: #c1e9e0;
+        }
+        
+        .booked {
+            background-color: #fde8e8;
+            color: #c53030;
+        }
+        
+        .selected {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            box-shadow: 0 0 0 2px var(--secondary);
+        }
+        
+        .status-confirmed {
+            background-color: var(--confirmed);
+            color: white;
+        }
+        
+        .status-pending {
+            background-color: var(--pending);
+            color: white;
+        }
+        
+        .status-cancelled {
+            background-color: var(--cancelled);
+            color: white;
+        }
+        
+        .worker-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        
+        .worker-card {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            min-width: 180px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .worker-card.selected {
+            border-color: var(--secondary);
+            background-color: #e8f4fc;
+        }
+        
+        .worker-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .worker-schedule {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        #searchInput {
+            flex: 1;
+        }
+        
+        .setup-section {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .error-message {
+            color: var(--danger);
+            padding: 10px;
+            background: #fde8e8;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .success-message {
+            color: var(--success);
+            padding: 10px;
+            background: #e8f6f3;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .calendar-view {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .calendar-day {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            min-height: 120px;
+            background: white;
+        }
+        
+        .calendar-day-header {
+            font-weight: 600;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        .calendar-event {
+            font-size: 12px;
+            padding: 3px 5px;
+            border-radius: 3px;
+            margin-bottom: 3px;
+            cursor: pointer;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .close-modal:hover {
+            color: var(--danger);
+        }
+        
+        @media (max-width: 768px) {
+            .worker-selector {
+                flex-direction: column;
+            }
+            
+            .info-row {
+                flex-direction: column;
+            }
+            
+            .info-label {
+                min-width: auto;
+                margin-bottom: 5px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .calendar-view {
+                grid-template-columns: repeat(1, 1fr);
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
     <!-- إضافة Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -49,7 +472,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 </head>
 <body>
-    <!-- المحتوى يبقى كما هو -->
     <div class="container">
         <header>
             <div class="header-title">
@@ -103,16 +525,269 @@
         </div>
 
         <!-- محتوى النظام الرئيسي -->
-        <div id="mainContent">
-            <!-- المحتوى الأصلي للنظام -->
+        <div id="mainContent" style="display: none;">
+            <div class="tabs">
+                <div class="tab active" data-tab="booking">الحجوزات</div>
+                <div class="tab" data-tab="customers">العملاء</div>
+                <div class="tab" data-tab="workers">العاملات</div>
+                <div class="tab" data-tab="calendar">التقويم</div>
+            </div>
+            
+            <div class="tab-content active" id="bookingTab">
+                <div class="card">
+                    <h2 class="card-title">البحث عن العميل</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchInput" placeholder="أدخل رقم جوال العميل للبحث...">
+                        <button class="btn btn-search" onclick="searchCustomer()">
+                            <i class="fas fa-search"></i> بحث
+                        </button>
+                    </div>
+                    
+                    <div id="customerInfo" class="customer-info">
+                        <h3>بيانات العميل</h3>
+                        <div class="info-row">
+                            <span class="info-label">الاسم:</span>
+                            <span id="customerName">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">رقم الجوال:</span>
+                            <span id="customerPhone">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">العنوان:</span>
+                            <span id="customerAddress">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">رابط الموقع:</span>
+                            <a id="customerMap" href="#" target="_blank">عرض على الخريطة</a>
+                        </div>
+                        <div class="info-row">
+                            <button class="btn btn-warning" onclick="editCustomer()">
+                                <i class="fas fa-edit"></i> تعديل بيانات العميل
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title">اختر العاملة</h2>
+                    <div class="worker-selector" id="workerSelector">
+                        <div class="loading">جاري تحميل بيانات العاملات...</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title">الجدول الزمني <small id="selectedDateDisplay"></small></h2>
+                    <div class="form-group">
+                        <label for="datePicker">اختر التاريخ:</label>
+                        <input type="date" id="datePicker">
+                    </div>
+                    
+                    <div class="schedule">
+                        <div id="scheduleLoading" class="loading">جاري تحميل الجدول...</div>
+                        <table style="display: none;">
+                            <thead>
+                                <tr id="scheduleHeader">
+                                    <th>الوقت</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scheduleBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title">تأكيد الحجز</h2>
+                    <div class="form-group">
+                        <label for="serviceDuration">مدة الخدمة (ساعات):</label>
+                        <select id="serviceDuration">
+                            <option value="2">ساعتين</option>
+                            <option value="3">3 ساعات</option>
+                            <option value="4">4 ساعات</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bookingStatus">حالة الحجز:</label>
+                        <select id="bookingStatus">
+                            <option value="pending">قيد الانتظار</option>
+                            <option value="confirmed">مؤكد</option>
+                            <option value="cancelled">ملغى</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>موعد الحجز:</label>
+                        <div id="bookingSummary">لم يتم اختيار موعد بعد</div>
+                    </div>
+                    
+                    <button class="btn btn-book" onclick="bookAppointment()">
+                        <i class="fas fa-calendar-check"></i> تأكيد الحجز
+                    </button>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="customersTab">
+                <div class="card">
+                    <h2 class="card-title">إدارة العملاء</h2>
+                    <div class="table-responsive">
+                        <table id="customersTable">
+                            <thead>
+                                <tr>
+                                    <th>الاسم</th>
+                                    <th>رقم الجوال</th>
+                                    <th>العنوان</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4" class="loading">جاري تحميل بيانات العملاء...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="workersTab">
+                <div class="card">
+                    <h2 class="card-title">إدارة العاملات</h2>
+                    <div class="table-responsive">
+                        <table id="workersTable">
+                            <thead>
+                                <tr>
+                                    <th>اسم العاملة</th>
+                                    <th>رقم الجوال</th>
+                                    <th>الحالة</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4" class="loading">جاري تحميل بيانات العاملات...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="calendarTab">
+                <div class="card">
+                    <h2 class="card-title">تقويم الحجوزات</h2>
+                    <div class="form-group">
+                        <label for="calendarRange">عرض الحجوزات:</label>
+                        <select id="calendarRange" onchange="changeCalendarView()">
+                            <option value="day">يوم واحد</option>
+                            <option value="week" selected>أسبوع كامل</option>
+                        </select>
+                    </div>
+                    
+                    <div id="calendarView" class="calendar-view">
+                        <!-- سيتم ملء التقويم بالجافاسكريبت -->
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
 
+    <!-- نماذج الإضافة والتعديل -->
+    <div id="addCustomer" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>إضافة عميل جديد</h2>
+                <button class="close-modal" onclick="closeModal('addCustomer')">&times;</button>
+            </div>
+            <form id="customerForm" onsubmit="saveCustomer(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="newCustomerName">اسم العميل:</label>
+                        <input type="text" id="newCustomerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newCustomerPhone">رقم الجوال:</label>
+                        <input type="text" id="newCustomerPhone" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="newCustomerAddress">العنوان:</label>
+                    <textarea id="newCustomerAddress" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="newCustomerMap">رابط الموقع (خرائط جوجل):</label>
+                    <input type="url" id="newCustomerMap">
+                </div>
+                <button type="submit" class="btn btn-success">حفظ العميل</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="addWorker" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>إضافة عاملة جديدة</h2>
+                <button class="close-modal" onclick="closeModal('addWorker')">&times;</button>
+            </div>
+            <form id="workerForm" onsubmit="saveWorker(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="newWorkerName">اسم العاملة:</label>
+                        <input type="text" id="newWorkerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newWorkerPhone">رقم الجوال:</label>
+                        <input type="text" id="newWorkerPhone">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="newWorkerStatus">حالة العاملة:</label>
+                    <select id="newWorkerStatus">
+                        <option value="active">نشطة</option>
+                        <option value="inactive">غير نشطة</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success">حفظ العاملة</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="editCustomer" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>تعديل بيانات العميل</h2>
+                <button class="close-modal" onclick="closeModal('editCustomer')">&times;</button>
+            </div>
+            <form id="editCustomerForm" onsubmit="updateCustomer(event)">
+                <input type="hidden" id="editCustomerId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editCustomerName">اسم العميل:</label>
+                        <input type="text" id="editCustomerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editCustomerPhone">رقم الجوال:</label>
+                        <input type="text" id="editCustomerPhone" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editCustomerAddress">العنوان:</label>
+                    <textarea id="editCustomerAddress" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editCustomerMap">رابط الموقع (خرائط جوجل):</label>
+                    <input type="url" id="editCustomerMap">
+                </div>
+                                <button type="submit" class="btn btn-success">تحديث البيانات</button>
+            </form>
+        </div>
     </div>
 
     <script>
-        // تكوين Firebase
+        // تكوين Firebase - استبدل هذه القيم بقيم التكوين الخاصة بك من Firebase Console
         const firebaseConfig = {
-            apiKey: "AIzaSyYOUR_API_KEY_HERE",
+            apiKey: "AIzaSyAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
             authDomain: "your-project-id.firebaseapp.com",
             projectId: "your-project-id",
             storageBucket: "your-project-id.appspot.com",
@@ -137,6 +812,10 @@
         let currentUser = null;
 
         // عناصر DOM
+        const loginSection = document.getElementById('loginSection');
+        const registerSection = document.getElementById('registerSection');
+        const mainContent = document.getElementById('mainContent');
+        const loginText = document.getElementById('loginText');
         const customerInfoDiv = document.getElementById('customerInfo');
         const customerNameSpan = document.getElementById('customerName');
         const customerPhoneSpan = document.getElementById('customerPhone');
@@ -150,10 +829,6 @@
         const bookingSummary = document.getElementById('bookingSummary');
         const workerSelector = document.getElementById('workerSelector');
         const selectedDateDisplay = document.getElementById('selectedDateDisplay');
-        const loginSection = document.getElementById('loginSection');
-        const registerSection = document.getElementById('registerSection');
-        const mainContent = document.getElementById('mainContent');
-        const loginText = document.getElementById('loginText');
 
         // تهيئة التطبيق
         function initApp() {
@@ -178,17 +853,10 @@
             // تعيين التاريخ الحالي كتاريخ افتراضي
             const today = new Date();
             datePicker.value = formatDate(today);
-            selectedDate = datePicker.value;
+            selectedDate = formatDate(today);
             selectedDateDisplay.textContent = `(${formatDateDisplay(today)})`;
             
-            // إضافة مستمع حدث لتغيير التاريخ
-            datePicker.addEventListener('change', function() {
-                selectedDate = this.value;
-                selectedDateDisplay.textContent = `(${formatDateDisplay(new Date(selectedDate))})`;
-                generateSchedule();
-            });
-            
-            // إضافة مستمعات أحداث للألسنة
+            // إضافة مستمعات الأحداث
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     const tabName = this.getAttribute('data-tab');
@@ -261,24 +929,18 @@
                 showLoading();
                 
                 // جلب العملاء
-                const customersSnapshot = await db.collection('customers')
-                    .where('userId', '==', currentUser.uid)
-                    .get();
+                const customersSnapshot = await db.collection('customers').get();
                 customers = customersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
                 // جلب العاملات
-                const workersSnapshot = await db.collection('workers')
-                    .where('userId', '==', currentUser.uid)
-                    .get();
+                const workersSnapshot = await db.collection('workers').get();
                 workers = workersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
                 // جلب الحجوزات
-                const bookingsSnapshot = await db.collection('bookings')
-                    .where('userId', '==', currentUser.uid)
-                    .get();
+                const bookingsSnapshot = await db.collection('bookings').get();
                 bookings = bookingsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 
-                // عرض البيانات حسب اللسان النشط
+                // عرض البيانات
                 if (currentTab === 'booking') {
                     renderWorkers();
                     generateSchedule();
@@ -299,10 +961,183 @@
             }
         }
 
+        // البحث عن عميل
+        function searchCustomer() {
+            let searchValue = document.getElementById('searchInput').value.trim();
+            
+            if (!searchValue) {
+                showError('يرجى إدخال رقم الجوال للبحث');
+                return;
+            }
+            
+            // تنظيف رقم الهاتف للبحث
+            searchValue = cleanPhoneNumber(searchValue);
+            
+            const customer = customers.find(c => {
+                const customerPhone = cleanPhoneNumber(c.phone);
+                return customerPhone === searchValue;
+            });
+            
+            if (customer) {
+                selectedCustomer = customer;
+                customerNameSpan.textContent = customer.name;
+                customerPhoneSpan.textContent = customer.phone;
+                customerAddressSpan.textContent = customer.address;
+                customerMapLink.href = customer.mapLink || "#";
+                customerInfoDiv.style.display = 'block';
+            } else {
+                showError('لم يتم العثور على عميل بهذا الرقم');
+                customerInfoDiv.style.display = 'none';
+            }
+        }
+
+        // تنظيف رقم الهاتف
+        function cleanPhoneNumber(phone) {
+            if (!phone) return '';
+            return phone.toString().replace(/[\s\-\+\(\)]/g, '');
+        }
+
+        // عرض العاملات
+        function renderWorkers() {
+            if (workers.length === 0) {
+                workerSelector.innerHTML = '<div class="loading">لا توجد بيانات للعاملات</div>';
+                return;
+            }
+            
+            workerSelector.innerHTML = '';
+            
+            workers.filter(w => w.status === 'active').forEach(worker => {
+                const workerCard = document.createElement('div');
+                workerCard.className = 'worker-card';
+                workerCard.innerHTML = `
+                    <div class="worker-name">${worker.name}</div>
+                    <div class="worker-schedule">${worker.phone || 'لا يوجد رقم'}</div>
+                `;
+                
+                workerCard.onclick = () => selectWorker(worker);
+                workerSelector.appendChild(workerCard);
+            });
+        }
+
+        // اختيار عاملة
+        function selectWorker(worker) {
+            selectedWorker = worker;
+            
+            // إزالة التحديد من جميع البطاقات
+            document.querySelectorAll('.worker-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // إضافة التحديد للبطاقة المختارة
+            event.currentTarget.classList.add('selected');
+        }
+
+        // إنشاء الجدول الزمني
+        function generateSchedule() {
+            if (!workers.length) {
+                scheduleLoading.textContent = 'لا توجد بيانات للعاملات';
+                return;
+            }
+            
+            scheduleLoading.style.display = 'block';
+            scheduleTable.style.display = 'none';
+            
+            setTimeout(() => {
+                // مسح الجدول الحالي
+                scheduleHeader.innerHTML = '<th>الوقت</th>';
+                scheduleBody.innerHTML = '';
+                
+                // إضافة عناوين العاملات
+                workers.filter(w => w.status === 'active').forEach(worker => {
+                    const th = document.createElement('th');
+                    th.textContent = worker.name;
+                    scheduleHeader.appendChild(th);
+                });
+                
+                // إنشاء الصفوف للجدول (من 8 صباحًا إلى 8 مساءً)
+                for (let hour = 8; hour <= 20; hour++) {
+                    const row = document.createElement('tr');
+                    
+                    // عمود الوقت
+                    const timeCell = document.createElement('td');
+                    timeCell.textContent = formatTime(hour);
+                    row.appendChild(timeCell);
+                    
+                    // خلايا العاملات
+                    workers.filter(w => w.status === 'active').forEach(worker => {
+                        const workerCell = document.createElement('td');
+                        
+                        // التحقق من وجود حجز في هذا الوقت
+                        const booking = bookings.find(b => 
+                            b.workerId === worker.id && 
+                            b.date === selectedDate && 
+                            isTimeInRange(hour, b.startTime, getDuration(b.startTime, b.endTime))
+                        );
+                        
+                        const timeSlot = document.createElement('div');
+                        
+                        if (booking) {
+                            const customer = customers.find(c => c.id === booking.customerId);
+                            timeSlot.className = `time-slot booked status-${booking.status}`;
+                            timeSlot.textContent = customer ? customer.name : 'محجوز';
+                            timeSlot.title = `حالة: ${getStatusText(booking.status)}`;
+                        } else {
+                            timeSlot.className = 'time-slot available';
+                            timeSlot.textContent = 'متاح';
+                            timeSlot.onclick = function() {
+                                selectTimeSlot(worker, selectedDate, formatTime(hour));
+                            };
+                        }
+                        
+                        workerCell.appendChild(timeSlot);
+                        row.appendChild(workerCell);
+                    });
+                    
+                    scheduleBody.appendChild(row);
+                }
+                
+                scheduleLoading.style.display = 'none';
+                scheduleTable.style.display = 'table';
+                
+            }, 500);
+        }
+
+        // اختيار موعد
+        function selectTimeSlot(worker, date, time) {
+            if (!selectedCustomer) {
+                showError('يرجى البحث عن عميل أولاً');
+                return;
+            }
+            
+            selectedWorker = worker;
+            selectedTime = time;
+            selectedDate = date;
+            
+            // إزالة التحديد من جميع الخلايا
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            
+            // إضافة التحديد للخلية المختارة
+            event.currentTarget.classList.add('selected');
+            
+            // تحديث ملخص الحجز
+            bookingSummary.textContent = `${date} الساعة ${time} مع ${worker.name}`;
+            
+            // تحديد العاملة تلقائياً
+            document.querySelectorAll('.worker-card').forEach(card => {
+                const cardWorkerName = card.querySelector('.worker-name').textContent;
+                if (cardWorkerName === worker.name) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+        }
+
         // حفظ عميل جديد في Firebase
         async function saveCustomer(event) {
             event.preventDefault();
-            if (!currentUser) return;
             
             const name = document.getElementById('newCustomerName').value;
             const phone = document.getElementById('newCustomerPhone').value;
@@ -315,7 +1150,6 @@
                     phone,
                     address,
                     mapLink,
-                    userId: currentUser.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
@@ -333,7 +1167,6 @@
         // حفظ عاملة جديدة في Firebase
         async function saveWorker(event) {
             event.preventDefault();
-            if (!currentUser) return;
             
             const name = document.getElementById('newWorkerName').value;
             const phone = document.getElementById('newWorkerPhone').value;
@@ -344,7 +1177,6 @@
                     name,
                     phone,
                     status,
-                    userId: currentUser.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
@@ -361,7 +1193,7 @@
 
         // حفظ حجز جديد في Firebase
         async function bookAppointment() {
-            if (!currentUser || !selectedCustomer || !selectedWorker || !selectedTime) return;
+            if (!selectedCustomer || !selectedWorker || !selectedTime) return;
             
             const duration = document.getElementById('serviceDuration').value;
             const status = document.getElementById('bookingStatus').value;
@@ -374,7 +1206,6 @@
                     startTime: selectedTime,
                     endTime: calculateEndTime(selectedTime, duration),
                     status,
-                    userId: currentUser.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
@@ -397,7 +1228,305 @@
             }
         }
 
-        // باقي الدوال تبقى كما هي مع تعديلات بسيطة للتوافق مع Firebase
+        // عرض جدول العملاء
+        function renderCustomersTable() {
+            const table = document.getElementById('customersTable');
+            const tbody = table.querySelector('tbody');
+            
+            if (customers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="loading">لا توجد عملاء</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            customers.forEach(customer => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${customer.name}</td>
+                    <td>${customer.phone}</td>
+                    <td>${customer.address || '-'}</td>
+                    <td>
+                        <button class="btn btn-warning" onclick="editCustomer('${customer.id}')">
+                            <i class="fas fa-edit"></i> تعديل
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteCustomer('${customer.id}')">
+                            <i class="fas fa-trash"></i> حذف
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // عرض جدول العاملات
+        function renderWorkersTable() {
+            const table = document.getElementById('workersTable');
+            const tbody = table.querySelector('tbody');
+            
+            if (workers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="loading">لا توجد عاملات</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            workers.forEach(worker => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${worker.name}</td>
+                    <td>${worker.phone || '-'}</td>
+                    <td><span class="status-${worker.status}">${worker.status === 'active' ? 'نشطة' : 'غير نشطة'}</span></td>
+                    <td>
+                        <button class="btn btn-warning" onclick="editWorker('${worker.id}')">
+                            <i class="fas fa-edit"></i> تعديل
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteWorker('${worker.id}')">
+                            <i class="fas fa-trash"></i> حذف
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // عرض التقويم
+        function renderCalendar() {
+            const calendarView = document.getElementById('calendarView');
+            const range = document.getElementById('calendarRange').value;
+            
+            if (range === 'day') {
+                renderDayCalendar();
+            } else {
+                renderWeekCalendar();
+            }
+        }
+
+        // عرض تقويم اليوم
+        function renderDayCalendar() {
+            const calendarView = document.getElementById('calendarView');
+            calendarView.innerHTML = '';
+            
+            const date = new Date(selectedDate);
+            const dayName = getDayName(date.getDay());
+            
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day';
+            dayElement.innerHTML = `
+                <div class="calendar-day-header">${dayName} - ${formatDateDisplay(date)}</div>
+            `;
+            
+            // إضافة الحجوزات لهذا اليوم
+            const dayBookings = bookings.filter(b => b.date === selectedDate);
+            dayBookings.forEach(booking => {
+                const customer = customers.find(c => c.id === booking.customerId);
+                const worker = workers.find(w => w.id === booking.workerId);
+                
+                if (customer && worker) {
+                    const eventElement = document.createElement('div');
+                    eventElement.className = `calendar-event status-${booking.status}`;
+                    eventElement.innerHTML = `
+                        <div>${booking.startTime} - ${booking.endTime}</div>
+                        <div>${customer.name} - ${worker.name}</div>
+                    `;
+                    dayElement.appendChild(eventElement);
+                }
+            });
+            
+            calendarView.appendChild(dayElement);
+        }
+
+        // عرض تقويم الأسبوع
+        function renderWeekCalendar() {
+            const calendarView = document.getElementById('calendarView');
+            calendarView.innerHTML = '';
+            
+            const today = new Date(selectedDate);
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay());
+            
+            for (let i = 0; i < 7; i++) {
+                const currentDate = new Date(startOfWeek);
+                currentDate.setDate(startOfWeek.getDate() + i);
+                const dateString = formatDate(currentDate);
+                const dayName = getDayName(currentDate.getDay());
+                
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.innerHTML = `
+                    <div class="calendar-day-header">${dayName}<br>${formatDateDisplay(currentDate)}</div>
+                `;
+                
+                // إضافة الحجوزات لهذا اليوم
+                const dayBookings = bookings.filter(b => b.date === dateString);
+                dayBookings.forEach(booking => {
+                    const customer = customers.find(c => c.id === booking.customerId);
+                    const worker = workers.find(w => w.id === booking.workerId);
+                    
+                    if (customer && worker) {
+                        const eventElement = document.createElement('div');
+                        eventElement.className = `calendar-event status-${booking.status}`;
+                        eventElement.innerHTML = `
+                            <div>${booking.startTime} - ${booking.endTime}</div>
+                            <div>${customer.name}</div>
+                        `;
+                        dayElement.appendChild(eventElement);
+                    }
+                });
+                
+                calendarView.appendChild(dayElement);
+            }
+        }
+
+        // تغيير عرض التقويم
+        function changeCalendarView() {
+            renderCalendar();
+        }
+
+        // تحرير بيانات عميل
+        function editCustomer(customerId) {
+            const customer = customers.find(c => c.id === customerId);
+            
+            if (!customer) {
+                showError('لم يتم العثور على العميل');
+                return;
+            }
+            
+            document.getElementById('editCustomerId').value = customer.id;
+            document.getElementById('editCustomerName').value = customer.name;
+            document.getElementById('editCustomerPhone').value = customer.phone;
+            document.getElementById('editCustomerAddress').value = customer.address || '';
+            document.getElementById('editCustomerMap').value = customer.mapLink || '';
+            
+            showModal('editCustomer');
+        }
+
+        // تحديث بيانات عميل
+        async function updateCustomer(event) {
+            event.preventDefault();
+            
+            const id = document.getElementById('editCustomerId').value;
+            const name = document.getElementById('editCustomerName').value;
+            const phone = document.getElementById('editCustomerPhone').value;
+            const address = document.getElementById('editCustomerAddress').value;
+            const mapLink = document.getElementById('editCustomerMap').value;
+            
+            try {
+                await db.collection('customers').doc(id).update({
+                    name,
+                    phone,
+                    address,
+                    mapLink
+                });
+                
+                // تحديث البيانات المحلية
+                const customerIndex = customers.findIndex(c => c.id === id);
+                if (customerIndex !== -1) {
+                    customers[customerIndex] = { ...customers[customerIndex], name, phone, address, mapLink };
+                }
+                
+                closeModal('editCustomer');
+                showSuccess('تم تحديث بيانات العميل بنجاح');
+                
+                // تحديث العرض
+                if (currentTab === 'customers') {
+                    renderCustomersTable();
+                }
+            } catch (error) {
+                showError('خطأ في تحديث البيانات: ' + error.message);
+            }
+        }
+
+        // حذف عميل
+        async function deleteCustomer(customerId) {
+            if (!confirm('هل أنت متأكد من رغبتك في حذف هذا العميل؟')) {
+                return;
+            }
+            
+            try {
+                await db.collection('customers').doc(customerId).delete();
+                
+                // تحديث البيانات المحلية
+                customers = customers.filter(c => c.id !== customerId);
+                
+                showSuccess('تم حذف العميل بنجاح');
+                renderCustomersTable();
+            } catch (error) {
+                showError('خطأ في حذف العميل: ' + error.message);
+            }
+        }
+
+        // حذف عاملة
+        async function deleteWorker(workerId) {
+            if (!confirm('هل أنت متأكد من رغبتك في حذف هذه العاملة؟')) {
+                return;
+            }
+            
+            try {
+                await db.collection('workers').doc(workerId).delete();
+                
+                // تحديث البيانات المحلية
+                workers = workers.filter(w => w.id !== workerId);
+                
+                showSuccess('تم حذف العاملة بنجاح');
+                renderWorkersTable();
+            } catch (error) {
+                showError('خطأ في حذف العاملة: ' + error.message);
+            }
+        }
+
+        // إعادة تعيين النموذج
+        function resetForm() {
+            document.getElementById('searchInput').value = '';
+            customerInfoDiv.style.display = 'none';
+            document.querySelectorAll('.worker-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            bookingSummary.textContent = 'لم يتم اختيار موعد بعد';
+            selectedWorker = null;
+            selectedTime = null;
+        }
+
+        // عرض نموذج
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        // إغلاق نموذج
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // تبديل الألسنة
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // إزالة النشاط من جميع الألسنة
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // إخفاء جميع محتويات الألسنة
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // تفعيل اللسان المحدد
+            document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
+            document.getElementById(`${tabName}Tab`).classList.add('active');
+            
+            // تحميل البيانات الخاصة باللسان
+            if (tabName === 'customers') {
+                renderCustomersTable();
+            } else if (tabName === 'workers') {
+                renderWorkersTable();
+            } else if (tabName === 'calendar') {
+                renderCalendar();
+            }
+        }
 
         // وظائف مساعدة
         function formatDate(date) {
@@ -405,6 +1534,57 @@
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
+        }
+        
+        function formatDateDisplay(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${day}/${month}/${year}`;
+        }
+        
+        function formatTime(hour) {
+            return `${hour}:00`;
+        }
+        
+        function getDayName(dayIndex) {
+            const days = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            return days[dayIndex];
+        }
+        
+        function isTimeInRange(hour, bookingTime, duration) {
+            if (!bookingTime) return false;
+            const bookingHour = parseInt(bookingTime.split(':')[0]);
+            return hour >= bookingHour && hour < bookingHour + duration;
+        }
+        
+        function getDuration(startTime, endTime) {
+            if (!startTime || !endTime) return 0;
+            const start = parseInt(startTime.split(':')[0]);
+            const end = parseInt(endTime.split(':')[0]);
+            return end - start;
+        }
+        
+        function calculateEndTime(startTime, duration) {
+            const startHour = parseInt(startTime.split(':')[0]);
+            return `${startHour + parseInt(duration)}:00`;
+        }
+        
+        function getStatusText(status) {
+            const statuses = {
+                'confirmed': 'مؤكد',
+                'pending': 'قيد الانتظار',
+                'cancelled': 'ملغى'
+            };
+            return statuses[status] || status;
+        }
+        
+        function showLoading() {
+            // يمكن إضافة مؤشر تحميل هنا
+        }
+        
+        function hideLoading() {
+            // إخفاء مؤشر التحميل
         }
         
         function showError(message) {
@@ -420,3 +1600,4 @@
     </script>
 </body>
 </html>
+                <button type="submit"
